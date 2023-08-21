@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">ExoPlayer</string>
+
+    <string name="cd_album_art">Album Art</string>
+    <string name="cd_btn_next">Btn Next</string>
+    <string name="cd_play_pause">Btn Play/Pause</string>
+    <string name="cd_btn_back">Btn Back</string>
+    <string name="cd_more_menu">More menu</string>
+    <string name="cd_btn_repeat">Btn repeat</string>
+    <string name="cd_playlist">Playlist</string>
+    <string name="cd_btn_previous">Btn Previous</string>
+
+    <string name="notification_channel_name"> Music Player Notification Channel</string>
+</resources>
