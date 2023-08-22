@@ -1,33 +1,25 @@
 package com.ipsmeet.exoplayer.activity
 
 import android.Manifest
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.Listener
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.session.MediaController
-import androidx.media3.session.SessionToken
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
-import com.google.common.util.concurrent.MoreExecutors
 import com.ipsmeet.exoplayer.R
 import com.ipsmeet.exoplayer.adapter.MusicListAdapter
 import com.ipsmeet.exoplayer.databinding.ActivityMusicListBinding
 import com.ipsmeet.exoplayer.dataclass.MusicDataClass
-import com.ipsmeet.exoplayer.service.PlayerService
 import com.ipsmeet.exoplayer.viewmodel.MusicListViewModel
 import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
 
@@ -37,18 +29,19 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
 
     private lateinit var permissionViewModel: PermissionViewModel
     private lateinit var viewModel: MusicListViewModel
+    lateinit var musicListAdapter: MusicListAdapter
 
     private var musicList = arrayListOf<MusicDataClass>()
     private lateinit var exoPlayer: ExoPlayer
     var position = 0
 
-    var isBound = false
-    lateinit var sessionToken: SessionToken
+    /**var isBound = false
+    private lateinit var sessionToken: SessionToken*/
 
-    override fun onStart() {
+    /**override fun onStart() {
         super.onStart()
         sessionToken = SessionToken(this, ComponentName(this, PlayerService::class.java))
-    }
+    }*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +49,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         setContentView(binding.root)
 
         supportActionBar!!.title = "Music Player"
+        window.statusBarColor = ContextCompat.getColor(this, R.color.darkest_gray)
 
         //  Initialize view-model
         permissionViewModel = ViewModelProvider(this)[PermissionViewModel::class.java]
@@ -78,10 +72,10 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
 
         //  Open MusicPlay screen
         binding.songInRun.setOnClickListener {
-            viewModel.viewMusicPlayLayout(this, binding, binding.layoutMusicPlay, musicList, position)
+            viewModel.viewMusicPlayLayout(this, binding, binding.layoutMusicPlay, musicList, position, musicListAdapter)
         }
 
-        doServiceBinding()
+        /**doServiceBinding()*/
     }
 
     private val storagePermissionLauncher: ActivityResultLauncher<String> =
@@ -96,21 +90,25 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
     private fun showMusics() {
         musicList = viewModel.fetchMedia(this@MusicListActivity)
 
-        binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MusicListActivity, LinearLayoutManager.VERTICAL, false)
-            adapter = MusicListAdapter(this@MusicListActivity, musicList, exoPlayer,
+        musicListAdapter = MusicListAdapter(this@MusicListActivity, musicList, exoPlayer,
             object : MusicListAdapter.OnClick {
                 override fun playMusic(musicList: List<MusicDataClass>, position: Int) {
                     this@MusicListActivity.position = position
                     startMusic(position)
                 }
             })
+
+        musicListAdapter.notifyDataSetChanged()
+
+        binding.recyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MusicListActivity, LinearLayoutManager.VERTICAL, false)
+            adapter = musicListAdapter
         }
     }
 
     private fun startMusic(position: Int) {
         binding.songInRun.visibility = View.VISIBLE
-        viewModel.startMusic(this@MusicListActivity, this, binding, position, exoPlayer)
+        viewModel.startMusic(this@MusicListActivity, this, binding, position, exoPlayer, musicListAdapter)
 
         Glide.with(this).load(R.drawable.round_pause_24).into(binding.imgVPlayPause)
         Glide.with(this).load(R.drawable.round_pause_24).into(binding.layoutMusicPlay.playPause)
@@ -179,13 +177,13 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         })
     }
 
-    private fun doServiceBinding() {
+    /**private fun doServiceBinding() {
         val intent = Intent(this, PlayerService::class.java)
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
         isBound = false
-    }
+    }*/
 
-    private val serviceConnection = object : ServiceConnection {
+    /**private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             val binder: PlayerService.ServiceBinder = service as PlayerService.ServiceBinder
             exoPlayer = binder.getPlayerService().player as ExoPlayer
@@ -195,7 +193,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         override fun onServiceDisconnected(name: ComponentName?) {
 
         }
-    }
+    }*/
 
     /*private fun setPlayerControls() {
 //        binding.playerView.player = player
@@ -220,7 +218,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
             binding.layoutMusicPlay.musicPlayScreen.visibility = View.GONE
             binding.layoutMusicPlayerHome.visibility = View.VISIBLE
         } else {
-            super.onBackPressed()
+            onBackPressedDispatcher.onBackPressed()
         }
     }
 
@@ -230,7 +228,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
             exoPlayer.stop()
 
         exoPlayer.release()
-        unbindService(serviceConnection)
-        isBound = false
+        /**unbindService(serviceConnection)
+        isBound = false*/
     }
 }

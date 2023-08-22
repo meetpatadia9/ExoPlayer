@@ -13,12 +13,12 @@
         android:id="@+id/imgV_back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/round_arrow_back_24"
+        android:contentDescription="@string/cd_btn_back"
+        android:src="@drawable/round_arrow_back_ios_24"
         app:layout_constraintBottom_toBottomOf="@id/txt_musicName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/txt_musicName"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_btn_back" />
+        app:tint="@color/white" />
 
     <TextView
         android:id="@+id/txt_musicName"
@@ -39,29 +39,29 @@
         android:id="@+id/imgV_musicMoreMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/cd_more_menu"
         android:src="@drawable/baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="@id/txt_musicName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/txt_musicName"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_more_menu" />
+        app:tint="@color/white" />
 
     <ImageView
         android:id="@+id/imgV_albumArt"
-        android:layout_width="@dimen/_180sdp"
-        android:layout_height="@dimen/_180sdp"
-        android:layout_marginTop="@dimen/_60sdp"
-        android:src="@drawable/round_music_note_24"
+        android:layout_width="@dimen/_200sdp"
+        android:layout_height="@dimen/_200sdp"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:contentDescription="@string/cd_album_art"
+        android:src="@drawable/default_thumbnail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_musicName"
-        android:contentDescription="@string/cd_album_art" />
+        app:layout_constraintTop_toBottomOf="@id/txt_musicName" />
 
     <SeekBar
         android:id="@+id/music_seekBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_50sdp"
+        android:layout_marginTop="@dimen/_35sdp"
         app:layout_constraintTop_toBottomOf="@id/imgV_albumArt" />
 
     <TextView
@@ -88,11 +88,21 @@
         android:layout_height="@dimen/_20sdp"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_30sdp"
+        android:contentDescription="@string/cd_btn_repeat"
         android:src="@drawable/round_repeat_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_musicProgress"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_btn_repeat" />
+        app:tint="@color/white" />
+
+    <ImageView
+        android:id="@+id/imgV_favorite"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:contentDescription="@string/favorite"
+        android:src="@drawable/baseline_favorite_border_24"
+        app:layout_constraintEnd_toStartOf="@id/imgV_playlist"
+        app:layout_constraintStart_toEndOf="@id/imgV_repeat"
+        app:layout_constraintTop_toTopOf="@id/imgV_repeat" />
 
     <ImageView
         android:id="@+id/imgV_playlist"
@@ -100,11 +110,11 @@
         android:layout_height="@dimen/_25sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_20sdp"
+        android:contentDescription="@string/cd_playlist"
         android:src="@drawable/round_playlist_play_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txt_musicDuration"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_playlist" />
+        app:tint="@color/white" />
 
     <ImageView
         android:id="@+id/play_previous"
@@ -112,23 +122,23 @@
         android:layout_height="@dimen/_30sdp"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_50sdp"
+        android:contentDescription="@string/cd_btn_previous"
         android:src="@drawable/round_skip_previous_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgV_repeat"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_btn_previous" />
+        app:tint="@color/white" />
 
     <ImageView
         android:id="@+id/playPause"
         android:layout_width="@dimen/_33sdp"
         android:layout_height="@dimen/_33sdp"
+        android:contentDescription="@string/cd_play_pause"
         android:src="@drawable/round_pause_24"
         app:layout_constraintBottom_toBottomOf="@id/play_previous"
         app:layout_constraintEnd_toStartOf="@id/play_next"
         app:layout_constraintStart_toEndOf="@id/play_previous"
         app:layout_constraintTop_toTopOf="@id/play_previous"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_play_pause" />
+        app:tint="@color/white" />
 
     <ImageView
         android:id="@+id/play_next"
@@ -136,10 +146,10 @@
         android:layout_height="@dimen/_30sdp"
         android:layout_marginTop="@dimen/_50sdp"
         android:layout_marginEnd="@dimen/_20sdp"
+        android:contentDescription="@string/cd_btn_next"
         android:src="@drawable/round_skip_next_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imgV_repeat"
-        app:tint="@color/white"
-        android:contentDescription="@string/cd_btn_next" />
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

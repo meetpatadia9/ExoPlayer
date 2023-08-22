@@ -25,6 +25,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="@dimen/_14ssp"
+        android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@id/imgV_thumbnail"
         app:layout_constraintEnd_toStartOf="@id/imgV_menuMore"
         app:layout_constraintStart_toEndOf="@id/imgV_thumbnail"
@@ -38,6 +39,7 @@
         android:src="@drawable/baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="@id/imgV_thumbnail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imgV_thumbnail" />
+        app:layout_constraintTop_toTopOf="@id/imgV_thumbnail"
+        app:tint="@color/white" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

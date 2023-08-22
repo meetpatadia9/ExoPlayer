@@ -3,7 +3,6 @@ package com.ipsmeet.exoplayer.viewmodel
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Handler
 import android.provider.MediaStore
@@ -21,6 +20,7 @@ import androidx.media3.exoplayer.source.*
 import com.bumptech.glide.Glide
 import com.google.common.net.HttpHeaders
 import com.ipsmeet.exoplayer.R
+import com.ipsmeet.exoplayer.adapter.MusicListAdapter
 import com.ipsmeet.exoplayer.databinding.ActivityMusicListBinding
 import com.ipsmeet.exoplayer.databinding.LayoutMusicPlayBinding
 import com.ipsmeet.exoplayer.dataclass.MusicDataClass
@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit
                 val path = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA))
                 val dateAdded = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATE_ADDED))
 
-                val mediaData = MusicDataClass(id, title, albumId, displayName, size, duration, path, dateAdded)
+                val mediaData = MusicDataClass(id, title, albumId, displayName, size, duration, path, dateAdded, false)
                 musicFiles.add(mediaData)
             }
         }
@@ -62,7 +62,11 @@ import java.util.concurrent.TimeUnit
         return pos
     }
 
-    fun startMusic(context: Context, activity: Activity, binding: ActivityMusicListBinding, position: Int, exoPlayer: ExoPlayer) {
+    fun startMusic(context: Context, activity: Activity, binding: ActivityMusicListBinding, position: Int, exoPlayer: ExoPlayer, musicListAdapter: MusicListAdapter) {
+        musicFiles[position-1].isPlaying = false
+        musicFiles[position].isPlaying = true
+        musicListAdapter.notifyDataSetChanged()
+
         exo = exoPlayer
         pos = position
 
@@ -118,6 +122,7 @@ import java.util.concurrent.TimeUnit
                     super.onPlaybackStateChanged(playbackState)
                     if (playbackState == Player.STATE_ENDED) {
                         // Logic to play the next song
+//                        musicFiles[position].isPlaying = false
                         pos++
                         if (pos > musicFiles.size-1) {
                             pos = 0
@@ -127,7 +132,14 @@ import java.util.concurrent.TimeUnit
 
                         binding.layoutMusicPlay.txtMusicProgress.text = displayTime(00.00)
                         binding.layoutMusicPlay.musicSeekBar.progress = 0
-                        startMusic(activity.applicationContext, activity, binding, pos, exo)
+                        startMusic(
+                            activity.applicationContext,
+                            activity,
+                            binding,
+                            pos,
+                            exo,
+                            musicListAdapter
+                        )
 
                         exo.setMediaItem(mediaItem)
                         val mediaSourceFactory = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -142,8 +154,8 @@ import java.util.concurrent.TimeUnit
         }
 
         val albumArt = Uri.parse("content://media/external/audio/albumart/${ musicFiles[position].albumId!!.toLong() }")
-        Glide.with(context).load(albumArt).placeholder(R.drawable.round_music_note_24).into(binding.imgVMusicThumbnail)
-        Glide.with(context).load(albumArt).placeholder(R.drawable.round_music_note_24).into(binding.layoutMusicPlay.imgVAlbumArt)
+        Glide.with(context).load(albumArt).placeholder(R.drawable.default_thumbnail).into(binding.imgVMusicThumbnail)
+        Glide.with(context).load(albumArt).placeholder(R.drawable.default_thumbnail).into(binding.layoutMusicPlay.imgVAlbumArt)
         binding.txtCurrentSong.text = musicFiles[position].displayName
         binding.layoutMusicPlay.txtMusicName.text = musicFiles[position].displayName
         Glide.with(context).load(R.drawable.round_pause_24).into(binding.layoutMusicPlay.playPause)
@@ -162,7 +174,7 @@ import java.util.concurrent.TimeUnit
     }
 
     //  MUSIC-PLAY VIEW
-    fun viewMusicPlayLayout(activity: Activity, binding: ActivityMusicListBinding, layoutMusicPlay: LayoutMusicPlayBinding, musicList: ArrayList<MusicDataClass>, position: Int) {
+    fun viewMusicPlayLayout(activity: Activity, binding: ActivityMusicListBinding, layoutMusicPlay: LayoutMusicPlayBinding, musicList: ArrayList<MusicDataClass>, position: Int, musicListAdapter: MusicListAdapter) {
         pos = position
         binding.layoutMusicPlayerHome.visibility = View.GONE
         layoutMusicPlay.apply {
@@ -199,6 +211,7 @@ import java.util.concurrent.TimeUnit
                             if (exo.isPlaying)
                                 exo.pause()
 
+//                            musicFiles[position].isPlaying = false
                             pos++
                             if (pos > musicList.size-1) {
                                 pos = 0
@@ -209,7 +222,7 @@ import java.util.concurrent.TimeUnit
                             txtMusicProgress.text = displayTime(00.00)
                             musicSeekBar.progress = 0
                             getCurrentPosition()
-                            startMusic(activity.applicationContext, activity, binding, pos, exo)
+                            startMusic(activity.applicationContext, activity, binding, pos, exo, musicListAdapter)
                         }
                     }
                     catch (e: Exception) {
@@ -243,9 +256,12 @@ import java.util.concurrent.TimeUnit
                     exo.pause()
                 }
 
+//                musicFiles[position].isPlaying = false
                 pos++
+
                 if (pos > musicList.size-1) {
                     pos = 0
+
                 } else {
                     pos
                 }
@@ -253,7 +269,7 @@ import java.util.concurrent.TimeUnit
                 txtMusicProgress.text = displayTime(00.00)
                 musicSeekBar.progress = 0
                 getCurrentPosition()
-                startMusic(activity.applicationContext, activity, binding, pos, exo)
+                startMusic(activity.applicationContext, activity, binding, pos, exo, musicListAdapter)
             }
 
             playPrevious.setOnClickListener {
@@ -261,7 +277,9 @@ import java.util.concurrent.TimeUnit
                     exo.pause()
                 }
 
+//                musicFiles[position].isPlaying = false
                 pos--
+
                 if (pos < 0) {
                     pos = musicList.size-1
                 } else {
@@ -271,7 +289,7 @@ import java.util.concurrent.TimeUnit
                 txtMusicProgress.text = displayTime(00.00)
                 musicSeekBar.progress = 0
                 getCurrentPosition()
-                startMusic(activity.applicationContext, activity, binding, pos, exo)
+                startMusic(activity.applicationContext, activity, binding, pos, exo, musicListAdapter)
             }
         }
     }

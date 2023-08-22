@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".activity.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,14 +26,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/design_default_color_primary" />
+            app:tint="@android:color/holo_orange_dark" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
-            android:text="Music Player"
-            android:textColor="@color/design_default_color_primary"
+            android:text="@string/txt_music_player"
+            android:textColor="@android:color/holo_orange_dark"
             android:textSize="@dimen/_18ssp"
             app:layout_constraintEnd_toEndOf="@id/imgV_music"
             app:layout_constraintStart_toStartOf="@id/imgV_music"
@@ -59,14 +60,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/design_default_color_primary" />
+            app:tint="@android:color/holo_orange_dark" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
-            android:text="Video Player"
-            android:textColor="@color/design_default_color_primary"
+            android:text="@string/txt_video_player"
+            android:textColor="@android:color/holo_orange_dark"
             android:textSize="@dimen/_18ssp"
             app:layout_constraintEnd_toEndOf="@id/imgV_video"
             app:layout_constraintStart_toStartOf="@id/imgV_video"
