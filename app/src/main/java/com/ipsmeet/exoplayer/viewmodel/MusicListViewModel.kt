@@ -8,6 +8,7 @@ import android.os.Handler
 import android.provider.MediaStore
 import android.view.View
 import android.widget.SeekBar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
@@ -62,8 +63,14 @@ import java.util.concurrent.TimeUnit
         return pos
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun startMusic(context: Context, activity: Activity, binding: ActivityMusicListBinding, position: Int, exoPlayer: ExoPlayer, musicListAdapter: MusicListAdapter) {
-        musicFiles[position-1].isPlaying = false
+        /*if (position > pos) {
+            musicFiles[position-1].isPlaying = false
+        } else {
+            musicFiles[position+1].isPlaying = false
+        }*/
+        musicFiles[pos].isPlaying = false
         musicFiles[position].isPlaying = true
         musicListAdapter.notifyDataSetChanged()
 
@@ -132,14 +139,7 @@ import java.util.concurrent.TimeUnit
 
                         binding.layoutMusicPlay.txtMusicProgress.text = displayTime(00.00)
                         binding.layoutMusicPlay.musicSeekBar.progress = 0
-                        startMusic(
-                            activity.applicationContext,
-                            activity,
-                            binding,
-                            pos,
-                            exo,
-                            musicListAdapter
-                        )
+                        startMusic(activity.applicationContext, activity, binding, pos, exo, musicListAdapter)
 
                         exo.setMediaItem(mediaItem)
                         val mediaSourceFactory = ProgressiveMediaSource.Factory(dataSourceFactory)
@@ -154,8 +154,8 @@ import java.util.concurrent.TimeUnit
         }
 
         val albumArt = Uri.parse("content://media/external/audio/albumart/${ musicFiles[position].albumId!!.toLong() }")
-        Glide.with(context).load(albumArt).placeholder(R.drawable.default_thumbnail).into(binding.imgVMusicThumbnail)
-        Glide.with(context).load(albumArt).placeholder(R.drawable.default_thumbnail).into(binding.layoutMusicPlay.imgVAlbumArt)
+        Glide.with(context).load(albumArt).placeholder(R.drawable.img_boy_listening).into(binding.imgVMusicThumbnail)
+        Glide.with(context).load(albumArt).placeholder(R.drawable.img_boy_listening).into(binding.layoutMusicPlay.imgVAlbumArt)
         binding.txtCurrentSong.text = musicFiles[position].displayName
         binding.layoutMusicPlay.txtMusicName.text = musicFiles[position].displayName
         Glide.with(context).load(R.drawable.round_pause_24).into(binding.layoutMusicPlay.playPause)
@@ -176,7 +176,9 @@ import java.util.concurrent.TimeUnit
     //  MUSIC-PLAY VIEW
     fun viewMusicPlayLayout(activity: Activity, binding: ActivityMusicListBinding, layoutMusicPlay: LayoutMusicPlayBinding, musicList: ArrayList<MusicDataClass>, position: Int, musicListAdapter: MusicListAdapter) {
         pos = position
+        binding.homeToolbar.visibility = View.GONE
         binding.layoutMusicPlayerHome.visibility = View.GONE
+        activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.darkest_gray)
         layoutMusicPlay.apply {
             //  visible layout
             musicPlayScreen.visibility = View.VISIBLE
@@ -184,7 +186,9 @@ import java.util.concurrent.TimeUnit
             //  hide layout
             imgVBack.setOnClickListener {
                 musicPlayScreen.visibility = View.GONE
+                binding.homeToolbar.visibility = View.VISIBLE
                 binding.layoutMusicPlayerHome.visibility = View.VISIBLE
+                activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.darker_gray)
             }
 
             //  open play-list

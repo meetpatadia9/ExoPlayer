@@ -1,6 +1,7 @@
 package com.ipsmeet.exoplayer.activity
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -29,7 +30,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
 
     private lateinit var permissionViewModel: PermissionViewModel
     private lateinit var viewModel: MusicListViewModel
-    lateinit var musicListAdapter: MusicListAdapter
+    private lateinit var musicListAdapter: MusicListAdapter
 
     private var musicList = arrayListOf<MusicDataClass>()
     private lateinit var exoPlayer: ExoPlayer
@@ -48,8 +49,8 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         binding = ActivityMusicListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        supportActionBar!!.title = "Music Player"
-        window.statusBarColor = ContextCompat.getColor(this, R.color.darkest_gray)
+        supportActionBar!!.hide()
+        window.statusBarColor = ContextCompat.getColor(this, R.color.darker_gray)
 
         //  Initialize view-model
         permissionViewModel = ViewModelProvider(this)[PermissionViewModel::class.java]
@@ -87,6 +88,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
             }
         }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun showMusics() {
         musicList = viewModel.fetchMedia(this@MusicListActivity)
 
@@ -97,7 +99,6 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
                     startMusic(position)
                 }
             })
-
         musicListAdapter.notifyDataSetChanged()
 
         binding.recyclerView.apply {
@@ -217,6 +218,8 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         if (binding.layoutMusicPlay.musicPlayScreen.visibility == View.VISIBLE) {
             binding.layoutMusicPlay.musicPlayScreen.visibility = View.GONE
             binding.layoutMusicPlayerHome.visibility = View.VISIBLE
+            binding.homeToolbar.visibility = View.VISIBLE
+            window.statusBarColor = ContextCompat.getColor(this, R.color.darker_gray)
         } else {
             onBackPressedDispatcher.onBackPressed()
         }
@@ -231,4 +234,5 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         /**unbindService(serviceConnection)
         isBound = false*/
     }
+
 }

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layout_singleMusicFile"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="@dimen/_10sdp">
@@ -11,10 +12,10 @@
         android:layout_width="@dimen/_45sdp"
         android:layout_height="@dimen/_45sdp"
         android:scaleType="centerCrop"
-        android:src="@drawable/round_music_note_24"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        tools:src="@drawable/round_music_note_24" />
 
     <TextView
         android:id="@+id/fileName"
@@ -24,8 +25,8 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:textSize="@dimen/_14ssp"
         android:textColor="@color/white"
+        android:textSize="@dimen/_14ssp"
         app:layout_constraintBottom_toBottomOf="@id/imgV_thumbnail"
         app:layout_constraintEnd_toStartOf="@id/imgV_menuMore"
         app:layout_constraintStart_toEndOf="@id/imgV_thumbnail"

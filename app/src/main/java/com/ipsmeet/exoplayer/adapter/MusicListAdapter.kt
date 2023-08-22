@@ -1,7 +1,8 @@
 package com.ipsmeet.exoplayer.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
 import android.view.LayoutInflater
@@ -15,7 +16,6 @@ import com.bumptech.glide.Glide
 import com.ipsmeet.exoplayer.R
 import com.ipsmeet.exoplayer.databinding.RecyclerMusicFileBinding
 import com.ipsmeet.exoplayer.dataclass.MusicDataClass
-import com.ipsmeet.exoplayer.service.PlayerService
 
 @UnstableApi class MusicListAdapter(val context: Context, private val musicList: List<MusicDataClass>, private val exoPlayer: ExoPlayer, private val listener: OnClick)
     :RecyclerView.Adapter<MusicListAdapter.MusicViewHolder>(){
@@ -31,15 +31,23 @@ import com.ipsmeet.exoplayer.service.PlayerService
         return musicList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.Q)
     override fun onBindViewHolder(holder: MusicViewHolder, position: Int) {
         holder.apply {
             with(musicList[position]) {
                 if (this.isPlaying == true) {
-                    itemBinding.fileName.setTextColor(ContextCompat.getColor(context, R.color.red))
-                }
-                else {
-                    itemBinding.fileName.setTextColor(ContextCompat.getColor(context, R.color.white))
+                    itemBinding.fileName.apply {
+                        setTextColor(ContextCompat.getColor(context, R.color.red))
+                        setTypeface(null, Typeface.BOLD)
+                    }
+                    itemBinding.imgVMenuMore.setColorFilter(ContextCompat.getColor(context, R.color.red))
+                } else {
+                    itemBinding.fileName.apply {
+                        setTextColor(ContextCompat.getColor(context, R.color.white))
+                        setTypeface(null, Typeface.NORMAL)
+                        itemBinding.imgVMenuMore.setColorFilter(ContextCompat.getColor(context, R.color.white))
+                    }
                 }
 
                 val albumArt = Uri.parse("content://media/external/audio/albumart/${ this.albumId!!.toLong() }")
@@ -48,22 +56,41 @@ import com.ipsmeet.exoplayer.service.PlayerService
                 itemBinding.fileName.text = this.displayName
 
                 itemView.setOnClickListener {
-                    itemBinding.fileName.setTextColor(ContextCompat.getColor(context, R.color.red))
+                    itemBinding.fileName.apply {
+                        setTextColor(ContextCompat.getColor(context, R.color.red))
+                        setTypeface(null, Typeface.BOLD)
+                    }
+                    itemBinding.imgVMenuMore.setColorFilter(ContextCompat.getColor(context, R.color.red))
                     notifyDataSetChanged()
-                    musicList[position-1].isPlaying = false
+
+                    /*if (position > 0) {
+                        musicList[position-1].isPlaying = false
+                    } else {
+                        musicList[musicList.size-1].isPlaying = false
+                    }*/
+
                     this.isPlaying = true
                     if (this.isPlaying == true) {
-                        itemBinding.fileName.setTextColor(ContextCompat.getColor(context, R.color.red))
+                        itemBinding.fileName.apply {
+                            setTextColor(ContextCompat.getColor(context, R.color.red))
+                            setTypeface(null, Typeface.BOLD)
+                        }
+                        itemBinding.imgVMenuMore.setColorFilter(ContextCompat.getColor(context, R.color.red))
                         notifyDataSetChanged()
                     }
                     else {
+                        itemBinding.fileName.apply {
+                            setTextColor(ContextCompat.getColor(context, R.color.white))
+                            setTypeface(null, Typeface.NORMAL)
+                        }
+                        itemBinding.imgVMenuMore.setColorFilter(ContextCompat.getColor(context, R.color.white))
                         notifyDataSetChanged()
-                        itemBinding.fileName.setTextColor(ContextCompat.getColor(context, R.color.white))
                     }
+
                     //  Start service
-                    context.startService(
+                    /**context.startService(
                         Intent(context.applicationContext, PlayerService::class.java)
-                    )
+                    )*/
 
                     if (exoPlayer.isPlaying) {
                         exoPlayer.pause()
