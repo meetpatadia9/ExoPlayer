@@ -15,9 +15,10 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imgV_back"
+            android:id="@+id/imgV_exit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/cd_btn_back"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/round_arrow_back_24"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -30,15 +31,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/_10sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/white"
             android:textSize="@dimen/_15ssp"
-            android:layout_marginEnd="@dimen/_15sdp"
-            app:layout_constraintBottom_toBottomOf="@id/imgV_back"
+            app:layout_constraintBottom_toBottomOf="@id/imgV_exit"
             app:layout_constraintEnd_toStartOf="@id/imgV_playlist"
-            app:layout_constraintStart_toEndOf="@id/imgV_back"
-            app:layout_constraintTop_toTopOf="@id/imgV_back"
+            app:layout_constraintStart_toEndOf="@id/imgV_exit"
+            app:layout_constraintTop_toTopOf="@id/imgV_exit"
             tools:text="Title" />
 
         <ImageView
@@ -46,8 +47,9 @@
             android:layout_width="@dimen/_36sdp"
             android:layout_height="@dimen/_36sdp"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:src="@drawable/round_playlist_play_24"
+            android:contentDescription="@string/cd_playlist"
             android:padding="@dimen/_5sdp"
+            android:src="@drawable/round_playlist_play_24"
             app:layout_constraintBottom_toBottomOf="@id/imgV_more"
             app:layout_constraintEnd_toStartOf="@id/imgV_more"
             app:layout_constraintTop_toTopOf="@id/imgV_more"
@@ -58,17 +60,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_5sdp"
+            android:contentDescription="@string/cd_more_menu"
             android:padding="@dimen/_5sdp"
             android:src="@drawable/baseline_more_vert_24"
-            app:layout_constraintBottom_toBottomOf="@id/imgV_back"
+            app:layout_constraintBottom_toBottomOf="@id/imgV_exit"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/imgV_back"
+            app:layout_constraintTop_toTopOf="@id/imgV_exit"
             app:tint="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- imgV_lockUnlock -->
-    <ImageView
+    <!--<ImageView
         android:id="@+id/imgV_lockUnlock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,7 +80,7 @@
         android:src="@drawable/round_lock_24"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/layout_toolbar"
-        app:tint="@color/white" />
+        app:tint="@color/white" />-->
 
     <!-- layout_videoControls -->
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -89,10 +92,11 @@
 
         <ImageView
             android:id="@+id/imgV_replay"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:src="@drawable/round_replay_5_24"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:contentDescription="@string/replay"
             android:padding="@dimen/_5sdp"
+            android:src="@drawable/round_replay_5_24"
             app:layout_constraintBottom_toBottomOf="@id/imgV_playPause"
             app:layout_constraintEnd_toStartOf="@id/imgV_previous"
             app:layout_constraintStart_toStartOf="parent"
@@ -101,10 +105,11 @@
 
         <ImageView
             android:id="@+id/imgV_previous"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:src="@drawable/round_skip_previous_24"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:contentDescription="@string/cd_btn_previous"
             android:padding="@dimen/_5sdp"
+            android:src="@drawable/round_skip_previous_24"
             app:layout_constraintBottom_toBottomOf="@id/imgV_playPause"
             app:layout_constraintEnd_toStartOf="@id/imgV_playPause"
             app:layout_constraintStart_toEndOf="@id/imgV_replay"
@@ -113,10 +118,11 @@
 
         <ImageView
             android:id="@+id/imgV_playPause"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:src="@drawable/round_pause_24"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:contentDescription="@string/cd_play_pause"
             android:padding="@dimen/_5sdp"
+            android:src="@drawable/round_pause_24"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -125,10 +131,11 @@
 
         <ImageView
             android:id="@+id/imgV_next"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:src="@drawable/round_skip_next_24"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:contentDescription="@string/cd_btn_next"
             android:padding="@dimen/_5sdp"
+            android:src="@drawable/round_skip_next_24"
             app:layout_constraintBottom_toBottomOf="@id/imgV_playPause"
             app:layout_constraintEnd_toStartOf="@id/imgV_forward"
             app:layout_constraintStart_toEndOf="@id/imgV_playPause"
@@ -137,10 +144,11 @@
 
         <ImageView
             android:id="@+id/imgV_forward"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_50sdp"
-            android:src="@drawable/round_forward_5_24"
+            android:layout_width="@dimen/_40sdp"
+            android:layout_height="@dimen/_40sdp"
+            android:contentDescription="@string/forward"
             android:padding="@dimen/_5sdp"
+            android:src="@drawable/round_forward_5_24"
             app:layout_constraintBottom_toBottomOf="@id/imgV_playPause"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/imgV_next"
@@ -154,17 +162,17 @@
         android:id="@+id/layout_videoProgress"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/_5sdp"
         android:layout_marginBottom="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/exo_position"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
             android:textColor="@color/white"
             android:textSize="@dimen/_10ssp"
-            android:layout_marginStart="@dimen/_15sdp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="00:00:00" />
@@ -173,9 +181,9 @@
             android:id="@+id/exo_duration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_15sdp"
             android:textColor="@color/white"
             android:textSize="@dimen/_10ssp"
-            android:layout_marginEnd="@dimen/_15sdp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="11:11:11" />
@@ -184,14 +192,14 @@
             android:id="@+id/exo_progress"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:scrubber_color="@color/purple_200"
             android:layout_marginStart="@dimen/_5sdp"
             android:layout_marginEnd="@dimen/_5sdp"
-            app:layout_constraintStart_toEndOf="@id/exo_position"
-            app:layout_constraintEnd_toStartOf="@id/exo_duration"
-            app:layout_constraintTop_toTopOf="@id/exo_position"
             app:layout_constraintBottom_toBottomOf="@id/exo_position"
-            app:played_color="@color/design_default_color_primary"
+            app:layout_constraintEnd_toStartOf="@id/exo_duration"
+            app:layout_constraintStart_toEndOf="@id/exo_position"
+            app:layout_constraintTop_toTopOf="@id/exo_position"
+            app:played_color="@color/yellow"
+            app:scrubber_color="@color/yellow"
             app:unplayed_color="@color/white" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

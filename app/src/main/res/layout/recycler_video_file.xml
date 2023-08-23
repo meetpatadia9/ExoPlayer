@@ -10,8 +10,9 @@
         android:id="@+id/imgV_thumbnail"
         android:layout_width="@dimen/_80sdp"
         android:layout_height="@dimen/_50sdp"
+        android:contentDescription="@string/thumbnail"
         android:scaleType="centerCrop"
-        android:src="@drawable/outline_folder_open_24"
+        android:src="@drawable/img"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,11 +24,11 @@
         android:background="@color/light_black"
         android:paddingStart="@dimen/_3sdp"
         android:paddingEnd="@dimen/_3sdp"
-        android:text="11:11:11"
         android:textColor="@color/white"
         android:textSize="@dimen/_9ssp"
         app:layout_constraintBottom_toBottomOf="@id/imgV_thumbnail"
-        app:layout_constraintEnd_toEndOf="@id/imgV_thumbnail" />
+        app:layout_constraintEnd_toEndOf="@id/imgV_thumbnail"
+        tools:text="11:11:11" />
 
     <TextView
         android:id="@+id/fileName"
@@ -37,12 +38,14 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:ellipsize="end"
         android:maxLines="1"
+        android:textColor="@color/white"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintBottom_toBottomOf="@id/imgV_thumbnail"
         app:layout_constraintEnd_toStartOf="@id/imgV_menuMore"
         app:layout_constraintStart_toEndOf="@id/imgV_thumbnail"
         app:layout_constraintTop_toTopOf="@id/imgV_thumbnail"
-        tools:text="File Name" />
+        tools:text="File Name"
+        tools:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/imgV_menuMore"
@@ -51,6 +54,9 @@
         android:src="@drawable/baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="@id/imgV_thumbnail"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imgV_thumbnail" />
+        app:layout_constraintTop_toTopOf="@id/imgV_thumbnail"
+        app:tint="@color/white"
+        tools:tint="@color/black"
+        android:contentDescription="@string/cd_more_menu" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

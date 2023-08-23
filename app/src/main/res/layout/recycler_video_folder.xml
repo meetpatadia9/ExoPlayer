@@ -10,9 +10,12 @@
         android:id="@+id/imgFolder"
         android:layout_width="@dimen/_54sdp"
         android:layout_height="@dimen/_54sdp"
+        android:contentDescription="@string/folder"
         android:src="@drawable/outline_folder_open_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/white"
+        tools:tint="@color/black" />
 
     <TextView
         android:id="@+id/folderName"
@@ -22,20 +25,25 @@
         android:layout_marginEnd="@dimen/_10sdp"
         android:ellipsize="end"
         android:singleLine="true"
+        android:textColor="@color/white"
         android:textSize="@dimen/_14ssp"
         app:layout_constraintBottom_toBottomOf="@id/imgFolder"
         app:layout_constraintEnd_toStartOf="@id/imgV_menuMore"
         app:layout_constraintStart_toEndOf="@id/imgFolder"
         app:layout_constraintTop_toTopOf="@id/imgFolder"
-        tools:text="Folder Name" />
+        tools:text="Folder Name"
+        tools:textColor="@color/black" />
 
     <ImageView
         android:id="@+id/imgV_menuMore"
         android:layout_width="@dimen/_20sdp"
         android:layout_height="@dimen/_20sdp"
+        android:contentDescription="@string/cd_more_menu"
         android:src="@drawable/baseline_more_vert_24"
         app:layout_constraintBottom_toBottomOf="@id/imgFolder"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/imgFolder" />
+        app:layout_constraintTop_toTopOf="@id/imgFolder"
+        app:tint="@color/white"
+        tools:tint="@color/black" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

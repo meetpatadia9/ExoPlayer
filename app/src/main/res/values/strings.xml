@@ -17,4 +17,7 @@
     <string name="txt_music_player">Music Player</string>
     <string name="thumbnail">Thumbnail</string>
     <string name="more">More</string>
+    <string name="folder">Folder</string>
+    <string name="replay">Replay</string>
+    <string name="forward">forward</string>
 </resources>
