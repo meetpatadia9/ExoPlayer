@@ -15,4 +15,6 @@
     <string name="music_player">Music Player</string>
     <string name="txt_video_player">Video Player</string>
     <string name="txt_music_player">Music Player</string>
+    <string name="thumbnail">Thumbnail</string>
+    <string name="more">More</string>
 </resources>

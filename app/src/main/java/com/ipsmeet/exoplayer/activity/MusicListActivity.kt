@@ -135,9 +135,8 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
 
         binding.imgVNext.setOnClickListener {
             if (exoPlayer.isPlaying) {
-                if (exoPlayer.isPlaying) {
+                if (exoPlayer.isPlaying)
                     exoPlayer.stop()
-                }
 
                 if (position == viewModel.getCurrentPosition()) {
                     position
@@ -146,6 +145,11 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
                 }
 
                 position++
+                if (position > musicList.size-1) {
+                    position = 0
+                } else {
+                    position
+                }
                 startMusic(position)
             }
         }
@@ -164,6 +168,7 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
                 //  if current-music completes, then play next song
                 if (exoPlayer.playbackState == Player.STATE_ENDED) {
                     position++
+
                     if (position > musicList.size-1) {
                         position = 0
                     } else {

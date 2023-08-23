@@ -65,11 +65,6 @@ import java.util.concurrent.TimeUnit
 
     @SuppressLint("NotifyDataSetChanged")
     fun startMusic(context: Context, activity: Activity, binding: ActivityMusicListBinding, position: Int, exoPlayer: ExoPlayer, musicListAdapter: MusicListAdapter) {
-        /*if (position > pos) {
-            musicFiles[position-1].isPlaying = false
-        } else {
-            musicFiles[position+1].isPlaying = false
-        }*/
         musicFiles[pos].isPlaying = false
         musicFiles[position].isPlaying = true
         musicListAdapter.notifyDataSetChanged()
@@ -129,13 +124,11 @@ import java.util.concurrent.TimeUnit
                     super.onPlaybackStateChanged(playbackState)
                     if (playbackState == Player.STATE_ENDED) {
                         // Logic to play the next song
-//                        musicFiles[position].isPlaying = false
                         pos++
-                        if (pos > musicFiles.size-1) {
+                        if (pos > musicFiles.size-1)
                             pos = 0
-                        } else {
+                        else
                             pos
-                        }
 
                         binding.layoutMusicPlay.txtMusicProgress.text = displayTime(00.00)
                         binding.layoutMusicPlay.musicSeekBar.progress = 0
@@ -174,6 +167,7 @@ import java.util.concurrent.TimeUnit
     }
 
     //  MUSIC-PLAY VIEW
+    @SuppressLint("NotifyDataSetChanged")
     fun viewMusicPlayLayout(activity: Activity, binding: ActivityMusicListBinding, layoutMusicPlay: LayoutMusicPlayBinding, musicList: ArrayList<MusicDataClass>, position: Int, musicListAdapter: MusicListAdapter) {
         pos = position
         binding.homeToolbar.visibility = View.GONE
@@ -215,13 +209,11 @@ import java.util.concurrent.TimeUnit
                             if (exo.isPlaying)
                                 exo.pause()
 
-//                            musicFiles[position].isPlaying = false
                             pos++
-                            if (pos > musicList.size-1) {
+                            if (pos > musicList.size-1)
                                 pos = 0
-                            } else {
+                            else
                                 pos
-                            }
 
                             txtMusicProgress.text = displayTime(00.00)
                             musicSeekBar.progress = 0
@@ -256,19 +248,19 @@ import java.util.concurrent.TimeUnit
             }
 
             playNext.setOnClickListener {
-                if (exo.isPlaying) {
+                if (exo.isPlaying)
                     exo.pause()
-                }
 
-//                musicFiles[position].isPlaying = false
+                musicFiles[pos].isPlaying = false
                 pos++
 
-                if (pos > musicList.size-1) {
+                if (pos > musicList.size-1)
                     pos = 0
-
-                } else {
+                else
                     pos
-                }
+
+                musicFiles[pos].isPlaying = true
+                musicListAdapter.notifyDataSetChanged()
 
                 txtMusicProgress.text = displayTime(00.00)
                 musicSeekBar.progress = 0
@@ -277,18 +269,19 @@ import java.util.concurrent.TimeUnit
             }
 
             playPrevious.setOnClickListener {
-                if (exo.isPlaying) {
+                if (exo.isPlaying)
                     exo.pause()
-                }
 
-//                musicFiles[position].isPlaying = false
+                musicFiles[pos].isPlaying = false
                 pos--
 
-                if (pos < 0) {
+                if (pos < 0)
                     pos = musicList.size-1
-                } else {
+                else
                     pos
-                }
+
+                musicFiles[pos].isPlaying = true
+                musicListAdapter.notifyDataSetChanged()
 
                 txtMusicProgress.text = displayTime(00.00)
                 musicSeekBar.progress = 0

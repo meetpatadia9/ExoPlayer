@@ -63,12 +63,6 @@ import com.ipsmeet.exoplayer.dataclass.MusicDataClass
                     itemBinding.imgVMenuMore.setColorFilter(ContextCompat.getColor(context, R.color.red))
                     notifyDataSetChanged()
 
-                    /*if (position > 0) {
-                        musicList[position-1].isPlaying = false
-                    } else {
-                        musicList[musicList.size-1].isPlaying = false
-                    }*/
-
                     this.isPlaying = true
                     if (this.isPlaying == true) {
                         itemBinding.fileName.apply {
