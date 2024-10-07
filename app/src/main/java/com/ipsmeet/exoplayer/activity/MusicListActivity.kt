@@ -12,7 +12,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
-import androidx.media3.common.Player.Listener
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,74 +23,72 @@ import com.ipsmeet.exoplayer.dataclass.MusicDataClass
 import com.ipsmeet.exoplayer.viewmodel.MusicListViewModel
 import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
 
-@UnstableApi class MusicListActivity : AppCompatActivity() {
+@UnstableApi
+class MusicListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMusicListBinding
-
     private lateinit var permissionViewModel: PermissionViewModel
     private lateinit var viewModel: MusicListViewModel
     private lateinit var musicListAdapter: MusicListAdapter
-
-    private var musicList = arrayListOf<MusicDataClass>()
     private lateinit var exoPlayer: ExoPlayer
-    var position = 0
+    private var musicList = arrayListOf<MusicDataClass>()
+    private var position = 0
 
-    /**var isBound = false
-    private lateinit var sessionToken: SessionToken*/
-
-    /**override fun onStart() {
-        super.onStart()
-        sessionToken = SessionToken(this, ComponentName(this, PlayerService::class.java))
-    }*/
+    private val storagePermissionLauncher: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+            if (isGranted) showMusics() else permissionViewModel.requestPermission(this)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMusicListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setupUI()
+        initializeViewModels()
+        setupExoPlayer()
+        requestStoragePermission()
+        setupSwipeRefresh()
+        setupMusicPlayButton()
+    }
 
-        supportActionBar!!.hide()
+    private fun setupUI() {
+        supportActionBar?.hide()
         window.statusBarColor = ContextCompat.getColor(this, R.color.darker_gray)
+    }
 
-        //  Initialize view-model
+    private fun initializeViewModels() {
         permissionViewModel = ViewModelProvider(this)[PermissionViewModel::class.java]
         viewModel = ViewModelProvider(this)[MusicListViewModel::class.java]
+    }
 
-        //  Initialize exo-player
+    private fun setupExoPlayer() {
         exoPlayer = ExoPlayer.Builder(this).build()
+        exoPlayer.addListener(playerListener)
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            storagePermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
-        } else {
-            storagePermissionLauncher.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        }
+    private fun requestStoragePermission() {
+        val permission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+            Manifest.permission.READ_MEDIA_AUDIO
+        else Manifest.permission.WRITE_EXTERNAL_STORAGE
+        storagePermissionLauncher.launch(permission)
+    }
 
-        //  SwipeRefreshLayout - OnRefresh
+    private fun setupSwipeRefresh() {
         binding.swipeRefresh.setOnRefreshListener {
             showMusics()
             binding.swipeRefresh.isRefreshing = false
         }
+    }
 
-        //  Open MusicPlay screen
+    private fun setupMusicPlayButton() {
         binding.songInRun.setOnClickListener {
             viewModel.viewMusicPlayLayout(this, binding, binding.layoutMusicPlay, musicList, position, musicListAdapter)
         }
-
-        /**doServiceBinding()*/
     }
-
-    private val storagePermissionLauncher: ActivityResultLauncher<String> =
-        registerForActivityResult(ActivityResultContracts.RequestPermission()) {
-            if (it) {
-                showMusics()
-            } else {
-                permissionViewModel.requestPermission(this)
-            }
-        }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showMusics() {
-        musicList = viewModel.fetchMedia(this@MusicListActivity)
-
+        musicList = viewModel.fetchMedia(this)
         musicListAdapter = MusicListAdapter(this@MusicListActivity, musicList, exoPlayer,
             object : MusicListAdapter.OnClick {
                 override fun playMusic(musicList: List<MusicDataClass>, position: Int) {
@@ -102,123 +99,53 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
         musicListAdapter.notifyDataSetChanged()
 
         binding.recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MusicListActivity, LinearLayoutManager.VERTICAL, false)
+            layoutManager = LinearLayoutManager(this@MusicListActivity)
             adapter = musicListAdapter
         }
     }
 
     private fun startMusic(position: Int) {
         binding.songInRun.visibility = View.VISIBLE
-        viewModel.startMusic(this@MusicListActivity, this, binding, position, exoPlayer, musicListAdapter)
+        viewModel.startMusic(this, this, binding, position, exoPlayer, musicListAdapter)
 
-        Glide.with(this).load(R.drawable.round_pause_24).into(binding.imgVPlayPause)
-        Glide.with(this).load(R.drawable.round_pause_24).into(binding.layoutMusicPlay.playPause)
+        updatePlayPauseIcon(isPlaying = true)
         musicController()
     }
 
-    //  Home music controller
+    private fun updatePlayPauseIcon(isPlaying: Boolean) {
+        val iconRes = if (isPlaying) R.drawable.round_pause_24 else R.drawable.round_play_arrow_24
+        Glide.with(this).load(iconRes).into(binding.imgVPlayPause)
+        Glide.with(this).load(iconRes).into(binding.layoutMusicPlay.playPause)
+    }
+
     private fun musicController() {
         binding.imgVPlayPause.setOnClickListener {
-            if (exoPlayer.playWhenReady) {
-                exoPlayer.playWhenReady = false
-                exoPlayer.pause()
-                Glide.with(this).load(R.drawable.round_play_arrow_24).into(binding.imgVPlayPause)
-                Glide.with(this).load(R.drawable.round_play_arrow_24).into(binding.layoutMusicPlay.playPause)
-            }
-            else {
-                exoPlayer.playWhenReady = true
-                exoPlayer.play()
-                Glide.with(this).load(R.drawable.round_pause_24).into(binding.imgVPlayPause)
-                Glide.with(this).load(R.drawable.round_pause_24).into(binding.layoutMusicPlay.playPause)
-            }
+            exoPlayer.playWhenReady = !exoPlayer.playWhenReady
+            if (exoPlayer.playWhenReady) exoPlayer.play() else exoPlayer.pause()
+            updatePlayPauseIcon(exoPlayer.playWhenReady)
         }
 
-        binding.imgVNext.setOnClickListener {
-            if (exoPlayer.isPlaying) {
-                if (exoPlayer.isPlaying)
-                    exoPlayer.stop()
-
-                if (position == viewModel.getCurrentPosition()) {
-                    position
-                } else {
-                    position = viewModel.getCurrentPosition()
-                }
-
-                position++
-                if (position > musicList.size-1) {
-                    position = 0
-                } else {
-                    position
-                }
-                startMusic(position)
-            }
-        }
-        audioListener()
+        binding.imgVNext.setOnClickListener { playNext() }
     }
 
-    private fun audioListener() {
-        exoPlayer.addListener(object : Listener {
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(mediaItem, reason)
-                binding.txtCurrentSong.text = mediaItem!!.mediaMetadata.displayTitle
-            }
-
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                super.onPlaybackStateChanged(playbackState)
-                //  if current-music completes, then play next song
-                if (exoPlayer.playbackState == Player.STATE_ENDED) {
-                    position++
-
-                    if (position > musicList.size-1) {
-                        position = 0
-                    } else {
-                        position
-                    }
-
-                    binding.layoutMusicPlay.txtMusicProgress.text = viewModel.displayTime(00.00)
-                    binding.layoutMusicPlay.musicSeekBar.progress = 0
-                    startMusic(position)
-                }
-            }
-        })
+    private fun playNext() {
+        if (exoPlayer.isPlaying) {
+            exoPlayer.stop()
+            position = (position + 1) % musicList.size
+            startMusic(position)
+        }
     }
 
-    /**private fun doServiceBinding() {
-        val intent = Intent(this, PlayerService::class.java)
-        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-        isBound = false
-    }*/
-
-    /**private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            val binder: PlayerService.ServiceBinder = service as PlayerService.ServiceBinder
-            exoPlayer = binder.getPlayerService().player as ExoPlayer
-            isBound = true
+    private val playerListener = object : Player.Listener {
+        override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+            binding.txtCurrentSong.text = mediaItem?.mediaMetadata?.displayTitle
         }
 
-        override fun onServiceDisconnected(name: ComponentName?) {
-
+        override fun onPlaybackStateChanged(playbackState: Int) {
+            if (playbackState == Player.STATE_ENDED) playNext()
         }
-    }*/
+    }
 
-    /*private fun setPlayerControls() {
-//        binding.playerView.player = player
-//        musicPlayerBinding.controls.player = player
-        exoPlayer?.addListener(object : Player.Listener {
-            override fun onPlaybackStateChanged(playbackState: Int) {
-                super.onPlaybackStateChanged(playbackState)
-                when (playbackState) {
-//                    Player.STATE_BUFFERING -> show(musicPlayerBinding.progressCircular)
-                    Player.STATE_READY -> {
-                        exoPlayer?.playWhenReady = true
-//                        hide(musicPlayerBinding.progressCircular)
-                    }
-                }
-            }
-        })
-    }*/
-
-    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (binding.layoutMusicPlay.musicPlayScreen.visibility == View.VISIBLE) {
             binding.layoutMusicPlay.musicPlayScreen.visibility = View.GONE
@@ -226,18 +153,13 @@ import com.ipsmeet.exoplayer.viewmodel.PermissionViewModel
             binding.homeToolbar.visibility = View.VISIBLE
             window.statusBarColor = ContextCompat.getColor(this, R.color.darker_gray)
         } else {
-            onBackPressedDispatcher.onBackPressed()
+            super.onBackPressed()
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (exoPlayer.isPlaying)
-            exoPlayer.stop()
-
+        if (exoPlayer.isPlaying) exoPlayer.stop()
         exoPlayer.release()
-        /**unbindService(serviceConnection)
-        isBound = false*/
     }
-
 }
